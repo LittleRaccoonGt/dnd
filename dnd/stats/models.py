@@ -18,6 +18,38 @@ class Character(models.Model):
     )
 
 
+class CharacterClass(models.Model):
+    class Name(models.TextChoices):
+        BARBARIAN = "barbarian", "Barbarian"
+        BARD = "bard", "Bard"
+        CLERIC = "cleric", "Cleric"
+        DRUID = "druid", "Druid"
+        FIGHTER = "fighter", "Fighter"
+        MONK = "monk", "Monk"
+        PALADIN = "paladin", "Paladin"
+        RANGER = "ranger", "Ranger"
+        ROGUE = "rogue", "Rogue"
+        SORC = "sorcerer", "Sorcerer"
+        WARLOCK = "warlock", "Warlock"
+        WIZARD  = "wizard", "Wizard"
+
+    character = models.ForeignKey(
+        to=Character,
+        on_delete=models.CASCADE,
+        related_name="classes",
+    )
+    name = models.CharField(
+        max_length=9,
+        choices=Name.choices,
+    )
+    level = models.PositiveIntegerField(
+        default=1,
+    )
+
+    class Meta:
+        unique_together = ("character", "name")
+
+
 class Stat(models.Model):
     class Key(models.TextChoices):
         AC = "ac"
