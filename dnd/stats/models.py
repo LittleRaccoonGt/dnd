@@ -17,6 +17,17 @@ class Character(models.Model):
         default=1,
     )
 
+    str_val = models.PositiveIntegerField(default=10)
+    dex_val = models.PositiveIntegerField(default=10)
+    con_val = models.PositiveIntegerField(default=10)
+    int_val = models.PositiveIntegerField(default=10)
+    wis_val = models.PositiveIntegerField(default=10)
+    cha_val = models.PositiveIntegerField(default=10)
+
+    base_hp = models.PositiveIntegerField(default=1)
+    base_ac = models.PositiveIntegerField(default=10)
+    speed = models.PositiveIntegerField(default=30)
+
 
 class CharacterClass(models.Model):
     class Name(models.TextChoices):

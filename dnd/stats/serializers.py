@@ -14,6 +14,11 @@ from stats.models import (
 )
 
 
+# ============================================================================= #
+# ============================= Model serializers ============================= #
+# ============================================================================= #
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -60,3 +65,20 @@ class FeatureEffectSerializer(serializers.ModelSerializer):
     class Meta:
         model = FeatureEffect
         fields = "__all__"
+
+
+# ============================================================================= #
+# ============================= Data serializers ============================== #
+# ============================================================================= #
+
+
+class ResourceField(serializers.Serializer):
+    current = serializers.IntegerField()
+    max = serializers.IntegerField()
+
+
+class CharacterSheetSerializer(serializers.Serializer):
+    base = serializers.DictField()
+    stats = serializers.DictField(child=serializers.IntegerField(), allow_null=True)
+    flags = serializers.DictField(child=serializers.BooleanField(), allow_null=True)
+    resources = serializers.DictField(child=ResourceField(), allow_null=True)

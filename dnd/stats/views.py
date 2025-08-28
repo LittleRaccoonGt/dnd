@@ -1,7 +1,12 @@
 from django.shortcuts import render
 
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet
+
+from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiResponse
+
+from stats.calculator import compute_character_list
 
 from stats.models import (
     Character,
@@ -23,9 +28,16 @@ from stats.serializers import (
 
     FeatureSerializer,
     FeatureEffectSerializer,
+
+    CharacterSheetSerializer,
 )
 
 
+@extend_schema_view(
+    sheet=extend_schema(
+        responses={200: OpenApiResponse(CharacterSheetSerializer)}
+    )
+)
 class CharacterViewSet(ModelViewSet):
     serializer_class = CharacterSerializer
     queryset = Character.objects.all()
@@ -35,6 +47,12 @@ class CharacterViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save(owner=request.user)
         return Response(serializer.data)
+    
+    @action(detail=True, methods=["get"])
+    def sheet(self, request, pk=None):
+        character = self.get_object()
+        character_sheet = compute_character_list(character)
+        return Response(CharacterSheetSerializer(character_sheet).data)
 
 
 class StatViewSet(ModelViewSet):
